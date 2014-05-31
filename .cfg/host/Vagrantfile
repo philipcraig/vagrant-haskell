@@ -1,0 +1,113 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+def get_cpus
+  if    RUBY_PLATFORM =~ /darwin/
+    return `sysctl -n hw.availcpu`.to_i
+  elsif RUBY_PLATFORM =~ /linux/
+    return `cat /proc/cpuinfo | grep processor | wc -l`.to_i
+  else
+    return 1
+  end
+end
+
+def get_ram
+  if    RUBY_PLATFORM =~ /darwin/
+    return `echo $((($(sysctl -n hw.memsize) / (1024 ** 2)) / 4))`.to_i
+  elsif RUBY_PLATFORM =~ /linux/
+    return `echo $((($(cat /proc/cpuinfo | awk '/MemTotal/{ print $2 }') / 1024) / 4))`.to_i
+  else
+    return 512
+  end
+end
+
+cpus    = ENV.fetch( 'VAGRANT_B2D_CPUS'    , "#{ get_cpus }" )
+cpu_cap = ENV.fetch( 'VAGRANT_B2D_CPU_CAP' , '85'            )
+gui     = ENV.fetch( 'VAGRANT_B2D_GUI'     , 'false'         ) == 'true'
+ram     = ENV.fetch( 'VAGRANT_B2D_RAM'     , "#{ get_ram  }" )
+user    = ENV.fetch( 'VAGRANT_B2D_USER'    , 'vagrant'       )
+
+VAGRANTFILE_API_VERSION   = '2'
+Vagrant.require_version '>=  1.6.3'
+
+Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
+
+  ## use a custom boot2docker image that supports NFS
+  cfg.vm.box                      = 'yungsang/boot2docker'
+
+  ## use virtualbox for virtualization
+  cfg.vm.provider 'virtualbox' do |vbx, ovr|
+
+    ## name the virtual machine
+    vbx.name                      = 'host-haskell-virtualbox'
+
+    ## configure the vm resources
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--accelerate3d'    , 'off'            ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--cpuexecutioncap' , cpu_cap          ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--cpuhotplug'      , 'off'            ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--cpus'            , cpus             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--hpet'            , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--hwvirtex'        , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--ioapic'          , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--largepages'      , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--memory'          , ram              ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--nestedpaging'    , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--pae'             , 'off'            ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--vtxux'           , 'on'             ] )
+    vbx.customize( 'pre-boot', ['modifyvm'     , :id, '--vtxvpid'         , 'on'             ] )
+    vbx.customize( 'pre-boot', ['storageattach', :id, '--storagectl'      , 'IDE Controller' ,
+                                                      '--port'            , 0                ,
+                                                      '--device'          , 0                ,
+                                                      '--nonrotational'   , 'on'             ] )
+
+    ## start headless unless overriden
+    vbx.gui                       = gui
+
+    ## boot2docker doesn't support virtualbox guest-additions/shared-folders
+    vbx.check_guest_additions     = false
+    vbx.functional_vboxsf         = false
+
+    ## set up a private network for NFS
+    ovr.vm.network 'private_network',
+               ip: '10.42.42.42'
+  end
+
+  ## use NFS-based shared folders
+  cfg.vm.synced_folder '../../data', '/vagrant/data',
+           type: 'nfs',
+        nfs_udp: true,
+    nfs_version: 3
+
+  ## don't try to automatically update virtualbox guest additions
+  if Vagrant.has_plugin?( 'vagrant-vbguest' ) then
+    cfg.vbguest.auto_update       = false
+  end
+
+  ## set up caching if possible
+  if Vagrant.has_plugin?( 'vagrant-cachier' )
+    cfg.cache.scope               = :box
+    cfg.cache.synced_folder_opts  = {
+      type:          :nfs,
+      mount_options: ['rw', 'vers=3', 'udp', 'nolock']
+    }
+  end
+
+  ## yungsang/boot2docker: fix busybox/udhcpc issue
+  cfg.vm.provision :shell do |s|
+    s.inline = <<-EOT
+      if ! grep -qs ^nameserver /etc/resolv.conf; then
+        sudo /sbin/udhcpc
+      fi
+      cat /etc/resolv.conf
+    EOT
+  end
+
+  ## yungsang/boot2docker: adjust datetime after suspend and resume
+  cfg.vm.provision :shell do |s|
+    s.inline = <<-EOT
+      sudo /usr/local/bin/ntpclient -s -h pool.ntp.org
+      date
+    EOT
+  end
+
+end
