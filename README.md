@@ -59,11 +59,13 @@
 
 Some parameters can be modified by setting environment variables:
 
-| environment variable  | default value               | purpose                                             |
-|-----------------------|:---------------------------:|-----------------------------------------------------|
-| `VAGRANT_B2D_CPUS`    | total # of logical cores    | number of cores to allocate to vagrant              |
-| `VAGRANT_B2D_CPU_CAP` | `85` (out of `100`)         | max percentage of cpu capacity to allocate per core |
-| `VAGRANT_B2D_RAM`     | 1/4th total (MB)            | memory to allocate to vagrant                       |
+| environment variable     | default value                   | purpose                                                       |
+|--------------------------|:-------------------------------:|---------------------------------------------------------------|
+| `VAGRANT_B2D_CPUS`       | total # of logical cores        | number of cores to allocate to vagrant                        |
+| `VAGRANT_B2D_CPU_CAP`    | `85` (out of `100`)             | max percentage of cpu capacity to allocate per core           |
+| `VAGRANT_B2D_RAM`        | 1/4th total (MB)                | memory to allocate to vagrant                                 |
+| `VAGRANT_B2D_SHARE_NAME` | `data`                          | name of shared folder                                         |
+| `VAGRANT_B2D_SHARE_ROOT` | `.`                             | parent of shared folder relative to `vagrant-haskell`         |
 
 Example:
 
