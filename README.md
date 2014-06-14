@@ -8,11 +8,11 @@
 
 *   **A familiar VM-style workflow**
 
-        ~ ❯❯❯ vagrant up --provider=docker    # initialize vm, download image, launch container
+        ~/vagrant-haskell ❯❯❯ vagrant up --provider=docker    # initialize vm, download image, launch container
 
 *   **Convenient SSH access**
 
-        ~ ❯❯❯ vagrant ssh
+        ~/vagrant-haskell ❯❯❯ vagrant ssh
         ==> default: SSH will be proxied through the Docker virtual machine since we're
         ==> default: not running Docker natively. This is just a notice, and not an error.
         Warning: Permanently added '172.17.0.2' (ECDSA) to the list of known hosts.
@@ -21,12 +21,12 @@
         logout
         Connection to 172.17.0.2 closed.
         Connection to 127.0.0.1 closed.
-        ~ ❯❯❯
+        ~/vagrant-haskell ❯❯❯
 
 *   **NFS-based shared folders**
 
-        ~ ❯❯❯ echo 'main = print "hello, docker and vagrant!"' > data/Main.hs
-        ~ ❯❯❯ vagrant ssh
+        ~/vagrant-haskell ❯❯❯ echo 'main = print "hello, docker and vagrant!"' > data/Main.hs
+        ~/vagrant-haskell ❯❯❯ vagrant ssh
         [...]
         root@219d34de7386:~# cd data && ghc --make Main && ./Main
         [1 of 1] Compiling Main             ( Main.hs, Main.o )
@@ -42,15 +42,15 @@
 3.  check out the repository:
 
     ```
-    ~ ❯❯❯ cd ~/Desktop
-    ~ ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
+    ~/vagrant-haskell ❯❯❯ cd ~/Desktop
+    ~/vagrant-haskell ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
     ```
 
 5.  start `vagrant` (optionally overriding cpu/mem resources):
 
     ```
-    ~ ❯❯❯ cd vagrant-haskell
-    ~ ❯❯❯ vagrant up --provider=docker
+    ~/vagrant-haskell ❯❯❯ cd vagrant-haskell
+    ~/vagrant-haskell ❯❯❯ vagrant up --provider=docker
     ```
 
     *   After a few moments the images are downloaded and the VM initialized
@@ -71,5 +71,5 @@ Some parameters can be modified by setting environment variables:
 Example:
 
 ```
-~ ❯❯❯ VAGRANT_B2D_CPUS='8' VAGRANT_B2D_RAM='8192' vagrant up --provider=docker
+~/vagrant-haskell ❯❯❯ VAGRANT_B2D_CPUS='8' VAGRANT_B2D_RAM='8192' vagrant up --provider=docker
 ```
