@@ -55,6 +55,82 @@
 
     *   After a few moments the images are downloaded and the VM initialized
 
+#### Halting Vagrant
+
+When using the `docker` provider, `vagrant halt` will stop the `docker` container but not the host. The host is kept running so that multiple containers can be started quickly without spinning up a new VM.
+
+If you want to halt the `docker` host along with the container you will need to get the VM id from `vagrant global-status` and call `vagrant halt <id>`.
+
+The following session illustrates how to accomplish this:
+
+```
+~/vagrant-haskell ❯❯❯ vagrant status
+Current machine states:
+
+default                   running (docker)
+
+The container is created and running. You can stop it using
+`vagrant halt`, see logs with `vagrant docker-logs`, and
+kill/destroy it with `vagrant destroy`.
+
+~/vagrant-haskell ❯❯❯ vagrant global-status
+id       name    provider   state   directory
+-----------------------------------------------------------------------------------------------
+cbada68  default virtualbox running ~/vagrant-haskell/.cfg/host
+2fe2386  default docker     running ~/vagrant-haskell
+
+The above shows information about all known Vagrant environments
+on this machine. This data is cached and may not be completely
+up-to-date. To interact with any of the machines, you can go to
+that directory and run Vagrant, or you can use the ID directly
+with Vagrant commands from any directory. For example:
+"vagrant destroy 1a2b3c4d"
+
+~/vagrant-haskell ❯❯❯ vagrant halt
+==> default: Stopping container...
+
+~/vagrant-haskell ❯❯❯ vagrant status
+Current machine states:
+
+default                   stopped (docker)
+
+The container is created but not running. You can run it again
+with `vagrant up`. If the container always goes to "stopped"
+right away after being started, it is because the command being
+run exits and doesn't keep running.
+
+~/vagrant-haskell ❯❯❯ vagrant global-status
+id       name    provider   state   directory
+-----------------------------------------------------------------------------------------------
+cbada68  default virtualbox running ~/vagrant-haskell/.cfg/host
+2fe2386  default docker     stopped ~/vagrant-haskell
+
+The above shows information about all known Vagrant environments
+on this machine. This data is cached and may not be completely
+up-to-date. To interact with any of the machines, you can go to
+that directory and run Vagrant, or you can use the ID directly
+with Vagrant commands from any directory. For example:
+"vagrant destroy 1a2b3c4d"
+
+~/vagrant-haskell ❯❯❯ vagrant halt cbada68
+==> default: Attempting graceful shutdown of VM...
+~/vagrant-haskell/Vagrantfile:4: warning: already initialized constant VAGRANTFILE_API_VERSION
+~/vagrant-haskell/.cfg/host/Vagrantfile:36: warning: previous definition of VAGRANTFILE_API_VERSION was here
+
+~/vagrant-haskell ❯❯❯ vagrant global-status
+id       name    provider   state    directory
+------------------------------------------------------------------------------------------------
+cbada68  default virtualbox poweroff ~/vagrant-haskell/.cfg/host
+2fe2386  default docker     stopped  ~/vagrant-haskell
+
+The above shows information about all known Vagrant environments
+on this machine. This data is cached and may not be completely
+up-to-date. To interact with any of the machines, you can go to
+that directory and run Vagrant, or you can use the ID directly
+with Vagrant commands from any directory. For example:
+"vagrant destroy 1a2b3c4d"
+```
+
 ### Customizing the Environment
 
 Some parameters can be modified by setting environment variables:
