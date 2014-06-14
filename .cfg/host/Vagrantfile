@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+## calculate the number of cores on the host
+##   supports: (Linux, OS X)
 def get_cpus
   if    RUBY_PLATFORM =~ /darwin/
     return `sysctl -n hw.availcpu`.to_i
@@ -11,6 +13,8 @@ def get_cpus
   end
 end
 
+## calculate the total amount of ram on the host
+##   supports: (Linux, OS X)
 def get_ram
   if    RUBY_PLATFORM =~ /darwin/
     return `echo $((($(sysctl -n hw.memsize) / (1024 ** 2)) / 4))`.to_i
