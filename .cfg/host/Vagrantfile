@@ -34,6 +34,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
 
   ## use a custom boot2docker image that supports NFS
   cfg.vm.box                      = 'yungsang/boot2docker'
+  cfg.vm.box_version              = '1.0.0'
 
   ## use virtualbox for virtualization
   cfg.vm.provider 'virtualbox' do |vbx, ovr|
