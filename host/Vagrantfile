@@ -29,7 +29,7 @@ cpus       = ENV.fetch( 'VAGRANT_B2D_CPUS'       , "#{ get_cpus }" )
 cpu_cap    = ENV.fetch( 'VAGRANT_B2D_CPU_CAP'    , '85'            )
 gui        = ENV.fetch( 'VAGRANT_B2D_GUI'        , 'false'         ) == 'true'
 ram        = ENV.fetch( 'VAGRANT_B2D_RAM'        , "#{ get_ram  }" )
-share_name = ENV.fetch( 'VAGRANT_B2D_SHARE_NAME' , 'data'          )
+share_name = ENV.fetch( 'VAGRANT_B2D_SHARE_NAME' , 'shared'        )
 share_root = ENV.fetch( 'VAGRANT_B2D_SHARE_ROOT' , '.'             )
 user       = ENV.fetch( 'VAGRANT_B2D_USER'       , 'vagrant'       )
 
@@ -80,7 +80,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
   end
 
   ## use NFS-based shared folders
-  cfg.vm.synced_folder "../../#{share_root}/#{share_name}", "/vagrant/#{share_name}",
+  cfg.vm.synced_folder "../container/#{share_root}/#{share_name}", "/vagrant/#{share_name}",
            type: 'nfs',
         nfs_udp: true,
     nfs_version: 3

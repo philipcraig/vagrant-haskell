@@ -25,7 +25,7 @@
 
 *   **NFS-based shared folders**
 
-        ~/vagrant-haskell/container ❯❯❯ echo 'main = print "hello, docker and vagrant!"' > data/Main.hs
+        ~/vagrant-haskell/container ❯❯❯ echo 'main = print "hello, docker and vagrant!"' > shared/Main.hs
         ~/vagrant-haskell/container ❯❯❯ vagrant ssh
         [...]
         root@219d34de7386:~# cd data && ghc --make Main && ./Main
@@ -115,14 +115,14 @@ with Vagrant commands from any directory. For example:
 
 Some parameters can be modified by setting environment variables:
 
-| environment variable     | default value                   | purpose                                                       |
-|--------------------------|:-------------------------------:|---------------------------------------------------------------|
-| `VAGRANT_B2D_CPUS`       | total # of logical cores        | number of cores to allocate to vagrant                        |
-| `VAGRANT_B2D_CPU_CAP`    | `85` (out of `100`)             | max percentage of cpu capacity to allocate per core           |
-| `VAGRANT_B2D_GUI`        | `false`                         | controls whether docker host VM is run headless or not        |
-| `VAGRANT_B2D_RAM`        | 1/4th total (MB)                | memory to allocate to vagrant                                 |
-| `VAGRANT_B2D_SHARE_NAME` | `data`                          | name of shared folder                                         |
-| `VAGRANT_B2D_SHARE_ROOT` | `.`                             | parent of shared folder relative to `vagrant-haskell`         |
+| environment variable     | default value                   | purpose                                                         |
+|--------------------------|:-------------------------------:|-----------------------------------------------------------------|
+| `VAGRANT_B2D_CPUS`       | total # of logical cores        | number of cores to allocate to vagrant                          |
+| `VAGRANT_B2D_CPU_CAP`    | `85` (out of `100`)             | max percentage of cpu capacity to allocate per core             |
+| `VAGRANT_B2D_GUI`        | `false`                         | controls whether docker host VM is run headless or not          |
+| `VAGRANT_B2D_RAM`        | 1/4th total (MB)                | memory to allocate to vagrant                                   |
+| `VAGRANT_B2D_SHARE_NAME` | `shared`                        | name of shared folder                                           |
+| `VAGRANT_B2D_SHARE_ROOT` | `.`                             | parent of shared folder relative to `vagrant-haskell/container` |
 
 Example:
 
