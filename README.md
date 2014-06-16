@@ -42,14 +42,13 @@
 3.  check out the repository:
 
     ```
-    ~/vagrant-haskell ❯❯❯ cd ~/Desktop
-    ~/vagrant-haskell ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
+    ~ ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
     ```
 
 5.  start `vagrant` (optionally overriding cpu/mem resources):
 
     ```
-    ~/vagrant-haskell ❯❯❯ cd vagrant-haskell
+    ~ ❯❯❯ cd vagrant-haskell
     ~/vagrant-haskell ❯❯❯ vagrant up --provider=docker
     ```
 
