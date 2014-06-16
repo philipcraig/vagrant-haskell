@@ -12,7 +12,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
   cfg.vm.provider 'docker' do |dkr, ovr|
 
     ## customize the docker host
-    dkr.vagrant_vagrantfile  = '.cfg/host/Vagrantfile'
+    dkr.vagrant_vagrantfile  = '../host/Vagrantfile'
 
     ## use the haskell docker image
     dkr.image                = 'darinmorrison/haskell:0.1.0'
