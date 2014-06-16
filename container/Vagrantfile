@@ -19,7 +19,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
 
     ## configure ssh according to phusion/baseimage
     ovr.ssh.username         = 'root'
-    ovr.ssh.private_key_path = '.cfg/insecure_key'
+    ovr.ssh.private_key_path = 'keys/insecure_key'
 
     ## start the container
     dkr.cmd                  = ['/sbin/my_init', '--enable-insecure-key']
