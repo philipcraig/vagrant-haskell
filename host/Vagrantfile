@@ -1,37 +1,58 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+## puts on a given vagrant command
+def on_cmd_puts(cmd, msg)
+  puts msg if ARGV[0] == cmd
+end
+
 ## calculate the number of cores on the host
 ##   supports: (Linux, OS X)
-def get_cpus
-  if    RUBY_PLATFORM =~ /darwin/
-    return `sysctl -n hw.availcpu`.to_i
-  elsif RUBY_PLATFORM =~ /linux/
-    return `cat /proc/cpuinfo | grep processor | wc -l`.to_i
+def calc_cpus
+  if   ENV.has_key? 'VAGRANT_B2D_CPUS'
+      _cpus =   ENV['VAGRANT_B2D_CPUS']
+      on_cmd_puts('up', "host      => calc_cpus : overriding      'cpus' to #{_cpus}")
   else
-    return 1
+      _cpus = 1
+    if    RUBY_PLATFORM =~ /darwin/
+      _cpus = `sysctl -n hw.availcpu`.to_i
+    elsif RUBY_PLATFORM =~ /linux/
+      _cpus = `cat /proc/cpuinfo | grep processor | wc -l`.to_i
+    else
+      on_cmd_puts('up', "host      => calc_cpus : can't determine 'cpus' for 'RUBY_PLATFORM' = '#{RUBY_PLATFORM}'")
+    end
+      on_cmd_puts('up', "host      => calc_cpus : defaulting      'cpus' to #{_cpus}")
   end
+  return _cpus
 end
 
 ## calculate the total amount of ram on the host
 ##   supports: (Linux, OS X)
-def get_ram
-  if    RUBY_PLATFORM =~ /darwin/
-    return `echo $((($(sysctl -n hw.memsize) / (1024 ** 2)) / 4))`.to_i
-  elsif RUBY_PLATFORM =~ /linux/
-    return `echo $((($(cat /proc/meminfo | awk '/MemTotal/{ print $2 }') / 1024) / 4))`.to_i
+def calc_ram
+  if   ENV.has_key? 'VAGRANT_B2D_RAM'
+      _ram =    ENV['VAGRANT_B2D_RAM']
+      on_cmd_puts('up', "host      => calc_ram  : overriding      'ram'  to #{_ram}")
   else
-    return 512
+      _ram = 512
+    if    RUBY_PLATFORM =~ /darwin/
+      _ram = `echo $((($(sysctl -n hw.memsize) / (1024 ** 2)) / 4))`.to_i
+    elsif RUBY_PLATFORM =~ /linux/
+      _ram = `echo $((($(cat /proc/meminfo | awk '/MemTotal/{ print $2 }') / 1024) / 4))`.to_i
+    else
+      on_cmd_puts('up', "host      => calc_ram  : can't determine 'ram'  for 'RUBY_PLATFORM' = '#{RUBY_PLATFORM}'")
+    end
+      on_cmd_puts('up', "host      => calc_ram  : defaulting      'ram'  to #{_ram}")
   end
+  return _ram
 end
 
-cpus       = ENV.fetch( 'VAGRANT_B2D_CPUS'       , "#{ get_cpus }" )
-cpu_cap    = ENV.fetch( 'VAGRANT_B2D_CPU_CAP'    , '85'            )
-gui        = ENV.fetch( 'VAGRANT_B2D_GUI'        , 'false'         ) == 'true'
-ram        = ENV.fetch( 'VAGRANT_B2D_RAM'        , "#{ get_ram  }" )
-share_name = ENV.fetch( 'VAGRANT_B2D_SHARE_NAME' , 'shared'        )
-share_root = ENV.fetch( 'VAGRANT_B2D_SHARE_ROOT' , '.'             )
-user       = ENV.fetch( 'VAGRANT_B2D_USER'       , 'vagrant'       )
+cpus       = calc_cpus
+cpu_cap    = ENV.fetch( 'VAGRANT_B2D_CPU_CAP'    , '85'      )
+gui        = ENV.fetch( 'VAGRANT_B2D_GUI'        , 'false'   ) == 'true'
+ram        = calc_ram
+share_name = ENV.fetch( 'VAGRANT_B2D_SHARE_NAME' , 'shared'  )
+share_root = ENV.fetch( 'VAGRANT_B2D_SHARE_ROOT' , '.'       )
+user       = ENV.fetch( 'VAGRANT_B2D_USER'       , 'vagrant' )
 
 VAGRANTFILE_API_VERSION   = '2'
 Vagrant.require_version '>=  1.6.3'
