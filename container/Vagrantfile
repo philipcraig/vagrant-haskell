@@ -1,6 +1,22 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+## puts on a given vagrant command
+def on_cmd_puts(cmd, msg)
+  puts msg if ARGV[0] == cmd
+end
+
+## Notify the user when the haskell image is being downloaded
+##   FIXME: is there a cleaner way to do this?
+set_trace_func proc { |event, file, line, id, binding, classname|
+  if event == 'call'
+    if "#{classname}" == 'VagrantPlugins::DockerProvider::Action::Create' &&
+       "#{id}"        == 'call'
+       on_cmd_puts('up', 'container => docker    : downloading haskell image; please wait …')
+     end
+  end
+}
+
 VAGRANTFILE_API_VERSION      = '2'
 Vagrant.require_version    '>=  1.6.3'
 
