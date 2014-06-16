@@ -24,7 +24,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
     ## start the container
     dkr.cmd                  = ['/sbin/my_init', '--enable-insecure-key']
     dkr.name                 = 'container-haskell-docker'
-    dkr.volumes              = ['/vagrant/data:/root/data']
+    dkr.volumes              = ['/vagrant/shared:/root/shared']
 
   end
 
