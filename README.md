@@ -41,16 +41,11 @@
 
 3.  check out the repository:
 
-    ```
-    ~ ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
-    ```
+        ~ ❯❯❯ git clone https://github.com/darinmorrison/vagrant-haskell
 
 5.  start `vagrant` (optionally overriding cpu/mem resources):
 
-    ```
-    ~ ❯❯❯ cd vagrant-haskell/container
-    ~/vagrant-haskell/container ❯❯❯ vagrant up --provider=docker
-    ```
+        ~ ❯❯❯ cd vagrant-haskell/container && vagrant up --provider=docker
 
     *   After a few moments the images are downloaded and the VM initialized
 
