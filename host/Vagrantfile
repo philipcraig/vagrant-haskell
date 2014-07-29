@@ -138,4 +138,12 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
     EOT
   end
 
+  ## yungsang/boot2docker: use docker-enter from jpetazzo/nsenter
+  cfg.vm.provision :shell do |s|
+    s.inline = <<-EOT
+      curl -sL https://raw.githubusercontent.com/jpetazzo/nsenter/master/docker-enter\
+        | sed 's/\\("$NSENTER"\\)/sudo \\1/' >  /var/lib/boot2docker/bin/docker-enter
+    EOT
+  end
+
 end
