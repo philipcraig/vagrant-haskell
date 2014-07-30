@@ -1,6 +1,17 @@
 # vagrant-haskell: haskell in a box
 
-`vagrant-haskell` is a minimal tinycore-based docker host running [darinmorrison/docker-haskell](https://github.com/darinmorrison/docker-haskell).
+`vagrant-haskell` is a vagrant box shipping a minimal haskell toolchain via [darinmorrison/docker-haskell](https://github.com/darinmorrison/docker-haskell).
+
+## Contents
+
+The default configuration of `vagrant-haskell` provides the following:
+
+| package         | version    |
+|-----------------|------------|
+| `alex`          | `3.1.3`    |
+| `cabal-install` | `1.20.0.3` |
+| `happy`         | `1.19.4`   |
+| `ghc`           | `7.8.3`    |
 
 ## Why Vagrant?
 
