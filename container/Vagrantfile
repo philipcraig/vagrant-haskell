@@ -31,7 +31,7 @@ Vagrant.configure( VAGRANTFILE_API_VERSION ) do |cfg|
     dkr.vagrant_vagrantfile  = '../host/Vagrantfile'
 
     ## use the haskell docker image
-    dkr.image                = 'darinmorrison/haskell:0.2.2'
+    dkr.image                = 'darinmorrison/haskell:0.2.3'
 
     ## configure ssh according to phusion/baseimage
     ovr.ssh.username         = 'root'
